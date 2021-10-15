@@ -1,0 +1,14 @@
+.posts-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  .ant-card {
+    width: 25% !important;
+    margin-right: 50px !important;
+    margin-bottom: 50px !important;
+  }
+}
+
+.ant-modal-content {
+  box-shadow: none !important;
+}
