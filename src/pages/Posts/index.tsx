@@ -1,12 +1,11 @@
-import { Avatar, Button, Card, Modal } from 'antd';
+import { Avatar, Button, Card, Modal, List, Comment, Tooltip } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { COMMENTS_ENDPOINT, POSTS_ENDPOINT } from '../../constans/endpoints';
 import { getRequest, openNotification } from './../../utils/index';
 import { UserOutlined } from '@ant-design/icons';
-import './style.scss'
 import PageWrapper from './../../components/pageWrapper/index';
 import { UserContext } from '../../context/userContext';
-
+import './style.scss'
 
 const { Meta } = Card;
 
@@ -32,13 +31,22 @@ const PostsPage = () => {
   const [posts, setPosts] = useState<IPostsList[]>([])
   const [comments, setComments] = useState<IComments[]>([])
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const showModal = () => {
+  const [previewPostId, setPreviewPostId] = useState(null);
+  const [previewPostUserId, setPreviewPostUserId] = useState(null);
+  const [previewPostComments, setPreviewPostComments] = useState<IComments[] | null>(null);
+
+
+  const showModal = (id:any, userId: any) => {
+    setPreviewPostUserId(userId);
+    setPreviewPostId(id);
     setIsModalVisible(true);
   };
   const handleOk = () => {
     setIsModalVisible(false);
   };
-
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
   const getPosts = () => {
     getRequest(POSTS_ENDPOINT)
     .then(res => setPosts(res.data))
@@ -64,7 +72,7 @@ const PostsPage = () => {
       <>
       <h1>Posts Page</h1>
       <div className='posts-row'>
-        {posts.map((post, index) => {
+        {posts.map((post) => {
           return (
               <Card
               key={post.id} 
@@ -80,7 +88,7 @@ const PostsPage = () => {
                 <Avatar icon={<UserOutlined />} />
                 <p>{post.title}</p>
                 <p>{post.body}</p>
-                <Button type="primary" onClick={showModal} >
+                <Button type="primary" onClick={() => showModal(post.id, post.userId)} >
                   Show Comments
                 </Button>
               </Card>
@@ -88,20 +96,43 @@ const PostsPage = () => {
         })}
       </div>
         <Modal 
-          title={"Test title"} 
+            onCancel={handleCancel}
+          title={''} 
           visible={isModalVisible}
           footer={[ 
           <Button key="submit" type="primary" onClick={handleOk}>
             Close
           </Button>
-          ]}>
+          ]}
+        >
             <div className="current-post">
-              <Avatar icon={<UserOutlined />} />
-              <h5>{users.map((user) => user.name)}</h5>
-              <p>{'Test'}</p>
-              <p>{'Test'}</p>
+              <Card
+                key={posts.find(item => item.id === previewPostId)?.id} 
+                hoverable
+                title={users.map((user) => {
+                  if (user.id === posts.find(item => item.userId === previewPostUserId)?.userId) {
+                    return  user.name
+                  }})}
+                bordered={true} 
+              >
+                <Avatar icon={<UserOutlined />}/>
+                <p className='post-title'>{posts.find(item => item.id === previewPostId)?.title}</p>
+                <p>{posts.find(item => item.id === previewPostId)?.body}</p>
+              </Card>
             </div>
-            <p>Some contents...</p>
+            <div className='post-commets'>
+              {comments.map((item) => {
+                if (item.postId === previewPostId) {
+                  return (
+                    <Comment
+                      author={item.name}
+                      avatar={<Avatar icon={<UserOutlined />} />}
+                      content={item.body}
+                    />
+                  )
+                }
+              })}
+            </div>
         </Modal> 
       </>
     </PageWrapper>

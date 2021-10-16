@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getRequest } from '../../utils/index';
 import { ALBUMS_ENDPOINT } from '../../constans/endpoints';
 import PageWrapper from './../../components/pageWrapper/index';
 import { Table, Tag, Space } from 'antd';
 import { openNotification } from './../../utils/index';
+import { UserContext } from "../../context/userContext";
 
 const { Column, ColumnGroup } = Table;
 
@@ -14,6 +15,8 @@ interface Albums {
 };
 
 const AlbumsPage = () => {
+
+  const { users } = useContext(UserContext)
   const [AlbumItems, setAlbumsItems] = useState<Albums[]>([]);
 
   const getAlbumsItems = () => {
@@ -36,13 +39,13 @@ const AlbumsPage = () => {
     },
     {
       title: 'Album Title',
-      dataIndex: 'age',
-      key: 'age',
+      dataIndex: 'title',
+      key: 'title',
     },
     {
       title: 'Actions',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'actions',
+      key: 'actions',
     },
   ];
   
@@ -52,35 +55,7 @@ const AlbumsPage = () => {
 
         <h1>Album</h1>
         <div> 
-        {/* <Table dataSource={AlbumItems}>
-          <Column title="Name" />
-          <Column title="Age" dataIndex="age" key="age" />
-          <Column title="Address" dataIndex="address" key="address" />
-          <Column
-            title="Tags"
-            dataIndex="tags"
-            key="tags"
-            render={tags => (
-              <>
-                {tags.map((tag:any) => (
-                  <Tag color="blue" key={tag}>
-                    {tag}
-                  </Tag>
-                ))}
-              </>
-            )}
-          />
-          <Column
-            title="Action"
-            key="action"
-            render={(text, record:any) => (
-              <Space size="middle">
-                <a>Invite {record.lastName}</a>
-                <a>Delete</a>
-              </Space>
-            )}
-          />
-        </Table> */}
+        <Table columns={columns} dataSource={AlbumItems} />
         </div>
       </>
     </PageWrapper>
