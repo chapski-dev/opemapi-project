@@ -2,11 +2,12 @@ import { useContext, useEffect, useState } from "react";
 import { getRequest } from '../../utils/index';
 import { ALBUMS_ENDPOINT } from '../../constans/endpoints';
 import PageWrapper from './../../components/pageWrapper/index';
-import { Table, Tag, Space } from 'antd';
+import { Table, Button } from 'antd';
 import { openNotification } from './../../utils/index';
 import { UserContext } from "../../context/userContext";
+import { useHistory } from 'react-router-dom';
 
-const { Column, ColumnGroup } = Table;
+// const { Column, ColumnGroup } = Table;
 
 interface Albums {
   userId: number,
@@ -15,10 +16,12 @@ interface Albums {
 };
 
 const AlbumsPage = () => {
-
+  
+  const history =  useHistory();
   const { users } = useContext(UserContext)
-  const [AlbumItems, setAlbumsItems] = useState<Albums[]>([]);
+  const [albumItems, setAlbumsItems] = useState<Albums[]>([]);
 
+  
   const getAlbumsItems = () => {
     getRequest(ALBUMS_ENDPOINT)
     .then(res => setAlbumsItems(res.data))
@@ -27,15 +30,19 @@ const AlbumsPage = () => {
 
   useEffect(() => {
     getAlbumsItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-lne react-hooks/exhaustive-deps
   }, [])
 
   
   const columns = [
     {
       title: 'User Name',
-      dataIndex: 'name',
-      key: 'name',
+      render:(arr:any) => users.map((user) => {
+        if (user.id === albumItems.find(item => item.userId === arr.id)?.userId) {
+          return user.name
+        }
+      }),
+
     },
     {
       title: 'Album Title',
@@ -46,17 +53,16 @@ const AlbumsPage = () => {
       title: 'Actions',
       dataIndex: 'actions',
       key: 'actions',
+      // render: () => <Link to={`/albums/${albumItems.find}`}>Show Photos</Link>,
+      render: () => <Button key="submit" type="primary" onClick={() => history.push(`${window.location.pathname}/${albumItems.find(item => item.userId)?.userId}`)}>Show Photos</Button>,
     },
   ];
   
   return (
     <PageWrapper>
       <>
-
         <h1>Album</h1>
-        <div> 
-        <Table columns={columns} dataSource={AlbumItems} />
-        </div>
+        <Table columns={columns} dataSource={albumItems || users} />
       </>
     </PageWrapper>
   )

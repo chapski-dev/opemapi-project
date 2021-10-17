@@ -1,13 +1,14 @@
 
 import { useContext, useEffect, useState } from 'react';
 import PageWrapper from './../../components/pageWrapper/index';
-import { Card, Popover, Checkbox, Avatar, Select } from 'antd';
+import { Card, Popover, Checkbox, Avatar, Select, Space, Input, Button } from 'antd';
 import { getRequest, openNotification } from './../../utils/index';
 import { TODOS_ENDPOINT } from '../../constans/endpoints';
 import './style.scss'
 import { UserContext } from '../../context/userContext';
-import { UserOutlined } from '@ant-design/icons';
+import { AudioOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 
+const { Search } = Input;
 interface ITodos {
   userId: number,
   id: number,
@@ -18,7 +19,11 @@ interface ITodos {
 const TodosPage = () => {
   const { users } = useContext(UserContext)
   const [todos, setTodos] = useState<ITodos[]>([]);
-  // const [todosTitle, setTodosTitle] = useState();
+  const [searchNameValue, setSearchNameValue] = useState<string>('');
+  const [searchTitleValue, setSearchTitleValue] = useState<string>('');
+  const [selectComplitedValue, setSelectComplitedValue] = useState<string>('');
+  const [filteredTodos, setFilteredTodos] = useState<any[]>([]);
+
 
   const getTodos = () => {
     getRequest(TODOS_ENDPOINT)
@@ -32,34 +37,44 @@ const TodosPage = () => {
 
   const { Option } = Select;
 
-  function handleChange(value: any) {
-    console.log(`selected ${value}`);
+  const onSearch = () => {
+    const filterTodo:any[] = [searchNameValue, searchTitleValue, selectComplitedValue]
+    // const filterTodo = todos?.filter(todo => todo.title.includes(searchTitleValue));
+    filterTodo && setFilteredTodos(filterTodo)
+    setFilteredTodos(filterTodo)
+    console.log(filteredTodos);
+  };
+
+  function handleChange(value:any) {
+    setSelectComplitedValue(value);
   }
 
-  
   useEffect(() => {
     getTodos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
- 
-
   return (
     <PageWrapper>
       <>
-        <Select defaultValue="title" style={{ width: 120 }} onChange={handleChange}>
-          <Option value="jack">Jack</Option>
-          <Option value="lucy">lucy</Option>
-
+      <Space>
+        <Input value={searchNameValue} onChange={e => setSearchNameValue(e.target.value)} placeholder="Name" />
+        <Input value={searchTitleValue} onChange={e => setSearchTitleValue(e.target.value)} placeholder="Title" />
+        <Select defaultValue="compleeted" onChange={handleChange}>
+          <Option value='compleeted'>compleeted</Option>
+          <Option value='in-procces'>in procces</Option>
         </Select>
-        <Select defaultValue="lucy" style={{ width: 120 }}>
-          <Option value="lucy">Lucy</Option>
-        </Select>
-        <Select defaultValue="lucy" style={{ width: 120 }} allowClear>
-          <Option value="lucy">Lucy</Option>
-        </Select>
+        <Button onClick={onSearch}><SearchOutlined /></Button>
+      </Space >
         <h1>Todos Page</h1>
         <div className='todos-row'>
+          {filteredTodos.map((todosItem) => {
+            if(todosItem.length) {
+              return (
+                <div> Ты все верно сделал</div>
+              )
+            }
+          })}
           {todos.map((item) => {
             return (
               <Card key={item.id} title={users.map((user) => {

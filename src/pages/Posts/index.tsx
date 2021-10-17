@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, Modal, List, Comment, Tooltip } from 'antd';
+import { Avatar, Button, Card, Modal, Comment } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { COMMENTS_ENDPOINT, POSTS_ENDPOINT } from '../../constans/endpoints';
 import { getRequest, openNotification } from './../../utils/index';
@@ -33,7 +33,7 @@ const PostsPage = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [previewPostId, setPreviewPostId] = useState(null);
   const [previewPostUserId, setPreviewPostUserId] = useState(null);
-  const [previewPostComments, setPreviewPostComments] = useState<IComments[] | null>(null);
+  // const [previewPostComments, setPreviewPostComments] = useState<IComments[] | null>(null);
 
 
   const showModal = (id:any, userId: any) => {
@@ -75,7 +75,7 @@ const PostsPage = () => {
         {posts.map((post) => {
           return (
               <Card
-              key={post.id} 
+                key={post.id} 
                 hoverable
                 title={users.map((user) => {
                   if (user.id === post.userId) {
