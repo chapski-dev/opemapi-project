@@ -14,6 +14,7 @@ interface ITodos {
   id: number,
   title: string,
   completed: boolean,
+  userName: string,
 }
 
 const TodosPage = () => {
@@ -21,14 +22,14 @@ const TodosPage = () => {
   const [todos, setTodos] = useState<ITodos[]>([]);
   const [searchNameValue, setSearchNameValue] = useState<string>('');
   const [searchTitleValue, setSearchTitleValue] = useState<string>('');
-  const [selectComplitedValue, setSelectComplitedValue] = useState<string>('');
+  const [selectComplitedValue, setSelectComplitedValue] = useState<boolean>(true);
 
   const [filteredTodos, setFilteredTodos] = useState<any[]>([]);
 
 
   const getTodos = () => {
     getRequest(TODOS_ENDPOINT)
-    .then(res => setTodos(res.data))
+    .then((res: any) => setTodos(res.data))
     .catch(err => openNotification(err.response.data.error, err.response.data.message));
   }
 
@@ -39,30 +40,27 @@ const TodosPage = () => {
   const { Option } = Select;
 
   const onSearch = () => {
-    console.log(searchTitleValue);
+    console.log(todos);
     // const renderSerchItems = todos.filter(todo => todo.title.includes(searchTitleValue));
-    const renderSerchItems = todos.filter(todo => todo.title.includes(searchTitleValue) && todos.filter(todo => todo.userId === users.find(user => user.id)?.id).includes(searchNameValue));
-
-    console.log(renderSerchItems);
+    const renderSerchItems = todos.filter(todo => todo.title.includes(searchTitleValue) && todo.userName.includes(searchNameValue) && todo.completed === selectComplitedValue);
+    // console.log(searchNameValue,searchTitleValue);
     
     setTodos(renderSerchItems);
-
-    // const filterTodo:any[] = [searchNameValue, searchTitleValue, selectComplitedValue]
-    // // const filterTodo = todos?.filter(todo => todo.title.includes(searchTitleValue));
-    // filterTodo && setFilteredTodos(filterTodo)
-    // setFilteredTodos(filterTodo)
-    // console.log(filteredTodos);
   };
 
   function handleChange(value:any) {
-    setSelectComplitedValue(value);
+    setSelectComplitedValue(value === 'compleeted' ? true : false);
   }
-
+  
+  useEffect(() => {
+    const items = todos.map((item: any) => ({...item, userName: `${users.find((user) => user.id === item.userId)?.name}`}))
+    setTodos(items);
+  }, [users.length]);
   useEffect(() => {
     getTodos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  
   return (
     <PageWrapper>
       <>
