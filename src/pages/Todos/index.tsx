@@ -6,7 +6,7 @@ import { getRequest, openNotification } from './../../utils/index';
 import { TODOS_ENDPOINT } from '../../constans/endpoints';
 import './style.scss'
 import { UserContext } from '../../context/userContext';
-import { AudioOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { SearchOutlined, UserOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 interface ITodos {
@@ -22,6 +22,7 @@ const TodosPage = () => {
   const [searchNameValue, setSearchNameValue] = useState<string>('');
   const [searchTitleValue, setSearchTitleValue] = useState<string>('');
   const [selectComplitedValue, setSelectComplitedValue] = useState<string>('');
+
   const [filteredTodos, setFilteredTodos] = useState<any[]>([]);
 
 
@@ -38,11 +39,19 @@ const TodosPage = () => {
   const { Option } = Select;
 
   const onSearch = () => {
-    const filterTodo:any[] = [searchNameValue, searchTitleValue, selectComplitedValue]
-    // const filterTodo = todos?.filter(todo => todo.title.includes(searchTitleValue));
-    filterTodo && setFilteredTodos(filterTodo)
-    setFilteredTodos(filterTodo)
-    console.log(filteredTodos);
+    console.log(searchTitleValue);
+    // const renderSerchItems = todos.filter(todo => todo.title.includes(searchTitleValue));
+    const renderSerchItems = todos.filter(todo => todo.title.includes(searchTitleValue) && todos.filter(todo => todo.userId === users.find(user => user.id)?.id).includes(searchNameValue));
+
+    console.log(renderSerchItems);
+    
+    setTodos(renderSerchItems);
+
+    // const filterTodo:any[] = [searchNameValue, searchTitleValue, selectComplitedValue]
+    // // const filterTodo = todos?.filter(todo => todo.title.includes(searchTitleValue));
+    // filterTodo && setFilteredTodos(filterTodo)
+    // setFilteredTodos(filterTodo)
+    // console.log(filteredTodos);
   };
 
   function handleChange(value:any) {

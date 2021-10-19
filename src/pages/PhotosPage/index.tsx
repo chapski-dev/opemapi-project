@@ -17,12 +17,12 @@ interface IPhoto {
   thumbnailUrl: string,
 }
 
-
 const PhotosPage = () => {
-  const { users } = useContext(UserContext)
+  
+  const albumId = window.location.pathname.split("/")[2]
   const [photos, setPhotos] = useState<IPhoto[]>([]); 
   const getPhotos = () => {
-    getRequest(PHOTOS_ENDPOINT)
+    getRequest(`${PHOTOS_ENDPOINT}?albumId=${albumId}`)
     .then(res => setPhotos(res.data))
     .catch(error => console.log('error', error))
   }
@@ -35,18 +35,15 @@ const PhotosPage = () => {
   <PageWrapper>
     <>
       <h1>Album Photos</h1>
-      <div>Total: {photos.length}</div>
+      <div className='total-photos'>Total: {photos.length}</div>
       <div className='gallery'>
       <Image.PreviewGroup>
-        {/* {users.map((user) => { */
-          photos.map((photo?:IPhoto) => {
-            // if(user.id === photo?.albumId) {
-              <AlbumImage
-                url={photo?.url}
-                albumId={photo?.albumId}
-              />
-            // }
-          })
+        {photos.map((photo?:IPhoto) => (
+            <AlbumImage
+              url={photo?.url}
+              albumId={photo?.albumId}
+            />
+          ))
         }
       </Image.PreviewGroup>
       </div>

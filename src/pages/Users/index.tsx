@@ -14,6 +14,7 @@ const UsersPage = () => {
           {users.map((user) => {
             return(
             <Card
+              className="user-card"
               key={user.id} 
               title={user.name} 
               bordered={true} 

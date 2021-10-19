@@ -1,7 +1,11 @@
 .gallery {
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
+  .photo-wrapper {
+    margin-bottom: 20px;
+  }
 }
-img {
-  width: 20%;
+.total-photos {
+  margin-bottom: 40px;
 }
