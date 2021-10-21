@@ -40,12 +40,12 @@ const TodosPage = () => {
   const { Option } = Select;
 
   const onSearch = () => {
-    console.log(todos);
-    // const renderSerchItems = todos.filter(todo => todo.title.includes(searchTitleValue));
-    const renderSerchItems = todos.filter(todo => todo.title.includes(searchTitleValue) && todo.userName.includes(searchNameValue) && todo.completed === selectComplitedValue);
-    // console.log(searchNameValue,searchTitleValue);
-    
-    setTodos(renderSerchItems);
+    const renderSerchItems = todos.filter(todo => (
+      todo.title.toLowerCase().includes(searchTitleValue.toLowerCase()) 
+      && todo.userName.toLowerCase().includes(searchNameValue.toLowerCase()) 
+      && selectComplitedValue ? todo.completed : !todo.completed
+    )); 
+      setTodos(renderSerchItems);
   };
 
   function handleChange(value:any) {
@@ -75,13 +75,6 @@ const TodosPage = () => {
       </Space >
         <h1>Todos Page</h1>
         <div className='todos-row'>
-          {filteredTodos.map((todosItem) => {
-            if(todosItem.length) {
-              return (
-                <div> Ты все верно сделал</div>
-              )
-            }
-          })}
           {todos.map((item) => {
             return (
               <Card key={item.id} title={users.map((user) => {
