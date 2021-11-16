@@ -96,7 +96,7 @@ const PostsPage = () => {
         })}
       </div>
         <Modal 
-            onCancel={handleCancel}
+          onCancel={handleCancel}
           title={''} 
           visible={isModalVisible}
           footer={[ 

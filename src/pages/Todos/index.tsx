@@ -23,7 +23,6 @@ const TodosPage = () => {
   const [searchNameValue, setSearchNameValue] = useState<string>('');
   const [searchTitleValue, setSearchTitleValue] = useState<string>('');
   const [selectComplitedValue, setSelectComplitedValue] = useState<boolean>(true);
-
   const [filteredTodos, setFilteredTodos] = useState<any[]>([]);
 
 

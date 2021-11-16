@@ -49,7 +49,12 @@ export const UserContextProvider = (prosp: IProps) => {
   };
 
   useEffect(() => {
-    getUsers();
+    // getUsers();
+    // () => {
+      getRequest(USERS_ENDPOINT)
+      .then(res => setUsers(res.data))
+      .catch(err => openNotification(err.response.data.error, err.response.data.message));
+    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
