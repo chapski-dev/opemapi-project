@@ -1,4 +1,4 @@
-# Graduation project.
+# OpenApi project.
 
 What i need to do:
 
